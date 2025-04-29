@@ -3,73 +3,100 @@ const fetchPadsCategory = () => {
     .then((res) => res.json())
     .then((data) => {
       data.categories.forEach((element) => {
-        // console.log(element);
         const categoryContainer = document.getElementById("category");
-
         const div = document.createElement("div");
-        div.className = `flex items-center gap-4  bg-white rounded-full  shadow-md px-4 py-2 hover:bg-blue-200 hover:border border-blue-400 transition-shadow duration-300 ease-in-out`;
+
+        div.className = `flex items-center gap-4 bg-white rounded-full shadow-md px-4 py-2 hover:bg-blue-200 hover:border border-blue-400 transition-shadow duration-300 ease-in-out`;
+
         div.innerHTML = `
-                <div><img class="w-10 h-10 object-cover rounded-lg" src=${element.category_icon} alt=""/></div>
-                <h3>${element.category}</h3>
-                `;
+          <div><img class="w-10 h-10 object-cover rounded-lg" src="${element.category_icon}" alt=""/></div>
+          <h3>${element.category}</h3>
+        `;
 
         categoryContainer.appendChild(div);
       });
     });
 };
 
-// breed: "Golden Retriever";
-// category: "Dog";
-// date_of_birth: "2023-01-15";
-// gender: "Male";
-// image: "https://i.ibb.co.com/p0w744T/pet-1.jpg";
-// petId: 1;
-// pet_details: "This friendly male Golden Retriever is energetic and loyal, making him a perfect companion for families. Born on January 15, 2023, he enjoys playing outdoors and is especially great with children. Fully vaccinated, he's ready to join your family and bring endless joy. Priced at $1200, he offers love, loyalty, and a lively spirit for those seeking a playful yet gentle dog.";
-// pet_name: "Sunny";
-// price: 1200;
-// vaccinated_status: "Fully";
-const fetchAllPads = () => {
-  fetch(" https://openapi.programming-hero.com/api/peddy/pets")
+const fetchSinglePats = (petId) => {
+  fetch(`https://openapi.programming-hero.com/api/peddy/pet/${petId}`)
     .then((res) => res.json())
     .then((data) => {
-      data.pets.forEach((item, idx) => {
-        console.log(item);
-        const petContainer = document.getElementById("pet-container");
-        const petsDiv = document.createElement("div");
-        petsDiv.innerHTML = `
-   
-            <figure><img class="p-5 h-[320px] rounded-xl" src=${item.image} alt="Shoes" /></figure>
-            <div class="card-body">
-              <h2 class="card-title">${item.pet_name}</h2>
-              <p class ="flex item-center gap-2"><span><i class="fi fi-rr-apps"></i></span>Breed: ${item.breed}</p>
-              <p class ="flex item-center gap-2"><span><i class="fi fi-rs-calendar"></i></span>Birth: ${item.date_of_birth}</p>
-              <p class ="flex item-center gap-2"><span><i class="fi fi-rs-transgender"></i></span>Gender: ${item.gender}</p>
-              <p class ="flex item-center gap-2"><span><i class="fi fi-rr-dollar"></i></span>Price: ${item.price}</p>
-              <br>
-                <div class="flex items-center justify-between">
-          <div class="btn">
-            <i class="fi fi-rr-social-network"></i>
-          </div>
-          
-          <div>
-            <button class="btn">
-        Adopt
-            </button>
-          </div>
-          <div>
-            <button class="btn">
-        Details
-            </button>
+      const pet = data.petData;
+      const detailsContainer = document.getElementById("details-pets");
+
+      // Clear previous modal content
+      detailsContainer.innerHTML = "";
+
+      const div = document.createElement("div");
+      div.innerHTML = `
+      <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle" open>
+        <div class="modal-box">
+          <h3 class="font-bold text-lg">${pet.pet_name}</h3>
+          <img src="${pet.image}" class="w-full h-60 object-cover rounded-xl my-3" />
+          <p><strong>Breed:</strong> ${pet.breed}</p>
+          <p><strong>Birth:</strong> ${pet.date_of_birth}</p>
+          <p><strong>Gender:</strong> ${pet.gender}</p>
+          <p><strong>Vaccinated:</strong> ${pet.vaccinated_status}</p>
+          <p><strong>Price:</strong> $${pet.price}</p>
+          <p class="py-2">${pet.pet_details}</p>
+
+          <div class="modal-action">
+            <form method="dialog">
+              <button class="btn">Close</button>
+            </form>
           </div>
         </div>
+      </dialog>
+      `;
+
+      detailsContainer.appendChild(div);
+
+      // Show modal (optional if <dialog open> used)
+      const modal = document.getElementById("my_modal_5");
+      if (modal) modal.showModal?.();
+    });
+};
+
+const fetchAllPads = () => {
+  fetch("https://openapi.programming-hero.com/api/peddy/pets")
+    .then((res) => res.json())
+    .then((data) => {
+      const petContainer = document.getElementById("pet-container");
+
+      data.pets.forEach((item) => {
+        const petsDiv = document.createElement("div");
+        petsDiv.className = `card py-5 bg-base-200 shadow-xl border-shadow mx-auto my-4`;
+
+        petsDiv.innerHTML = `
+          <figure>
+            <img class="p-5 h-[280px] w-full object-cover rounded-[12px]" src="${item.image}" alt="${item.pet_name}" />
+          </figure>
+          <div class="card-body">
+            <h2 class="card-title">${item.pet_name}</h2>
+            <p class="flex items-center gap-2"><i class="fi fi-rr-apps"></i> Breed: ${item.breed}</p>
+            <p class="flex items-center gap-2"><i class="fi fi-rr-calendar"></i> Birth: ${item.date_of_birth}</p>
+            <p class="flex items-center gap-2"><i class="fi fi-rr-transgender"></i> Gender: ${item.gender}</p>
+            <p class="flex items-center gap-2"><i class="fi fi-rr-dollar"></i> Price: $${item.price}</p>
+            <br>
+            <div class="flex items-center justify-between">
+              <div class="btn"><i class="fi fi-rr-social-network"></i></div>
+              <button class="btn">Adopt</button>
+              <button class="btn details-btn">Details</button>
             </div>
-       
+          </div>
         `;
-        petsDiv.className = `card h-[400px] py-5 bg-base-200 shadow-xl border-shadow mx-auto my-4`;
+
         petContainer.appendChild(petsDiv);
+
+        // Attach event to details button
+        petsDiv.querySelector(".details-btn").addEventListener("click", () => {
+          fetchSinglePats(item.petId);
+        });
       });
     });
 };
 
+// Initial fetch
 fetchPadsCategory();
 fetchAllPads();
