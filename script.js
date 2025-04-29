@@ -34,23 +34,38 @@ const fetchAllPads = () => {
     .then((data) => {
       data.pets.forEach((item, idx) => {
         console.log(item);
-        const petContainer = document.getElementById("pet-container")
+        const petContainer = document.getElementById("pet-container");
         const petsDiv = document.createElement("div");
-        petsDiv.innerHTML =`
+        petsDiv.innerHTML = `
    
-            <figure><img src=${item.image} alt="Shoes" /></figure>
+            <figure><img class="p-5 h-[320px] rounded-xl" src=${item.image} alt="Shoes" /></figure>
             <div class="card-body">
               <h2 class="card-title">${item.pet_name}</h2>
-              <p>Breed: ${item.breed}</p>
-              <p>Birth: ${item.date_of_birth}</p>
-              <p>Gender: ${item.gender}</p>
-              <p>Price: ${item.price}</p>
-              
-              
+              <p class ="flex item-center gap-2"><span><i class="fi fi-rr-apps"></i></span>Breed: ${item.breed}</p>
+              <p class ="flex item-center gap-2"><span><i class="fi fi-rs-calendar"></i></span>Birth: ${item.date_of_birth}</p>
+              <p class ="flex item-center gap-2"><span><i class="fi fi-rs-transgender"></i></span>Gender: ${item.gender}</p>
+              <p class ="flex item-center gap-2"><span><i class="fi fi-rr-dollar"></i></span>Price: ${item.price}</p>
+              <br>
+                <div class="flex items-center justify-between">
+          <div class="btn">
+            <i class="fi fi-rr-social-network"></i>
+          </div>
+          
+          <div>
+            <button class="btn">
+        Adopt
+            </button>
+          </div>
+          <div>
+            <button class="btn">
+        Details
+            </button>
+          </div>
+        </div>
             </div>
        
-        `
-        petsDiv.className = `card w-96 bg-base-100 shadow-xl mx-auto my-4`;
+        `;
+        petsDiv.className = `card h-[400px] py-5 bg-base-200 shadow-xl border-shadow mx-auto my-4`;
         petContainer.appendChild(petsDiv);
       });
     });
